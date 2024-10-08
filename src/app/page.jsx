@@ -19,7 +19,7 @@ export default function HomePage() {
             </div>
          </div>
          <div className={styles.imgContainer}>
-            <Image src="/hero.gif" alt="" fill className={styles.heroImg} />
+            <Image src="/hero.gif" alt="" unoptimized fill className={styles.heroImg} />
          </div>
       </div>
    );

@@ -1,36 +1,40 @@
 import Image from "next/image";
 import styles from "./singlePost.module.css";
+import { getPost } from "@/lib/data";
+import PostUser from "@/components/postUser/PostUser";
+import { Suspense } from "react";
 
-export default function SinglePostPage() {
+export default async function SinglePostPage({ params }) {
+   const { slug } = params;
+
+   const post = await getPost(slug);
+
    return (
       <div className={styles.container}>
-         <div className={styles.imgContainer}>
-            <Image src="https://images.pexels.com/photos/27068594/pexels-photo-27068594/free-photo-of-towers-of-castle-among-trees.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
+         {post.img && <div className={styles.imgContainer}>
+            <Image src={post.img}
                alt=""
                fill
                className={styles.img}
             />
-         </div>
+         </div>}
          <div className={styles.textContainer}>
-            <h1 className={styles.title}>Title</h1>
+            <h1 className={styles.title}>{post.title}</h1>
             <div className={styles.detail}>
-               <Image src="https://images.pexels.com/photos/27068594/pexels-photo-27068594/free-photo-of-towers-of-castle-among-trees.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
-                  alt=""
-                  width={50}
-                  height={50}
-                  className={styles.avatar}
-               />
                <div className={styles.detailText}>
-                  <span className={styles.detailTitle}>Author</span>
-                  <span className={styles.detailValue}>Terry Jefferson</span>
+                  {post && (
+                     <Suspense fallback={<div>Loading...</div>}>
+                        <PostUser userId={post.userId} />
+                     </Suspense>
+                  )}
                </div>
                <div className={styles.detailText}>
                   <span className={styles.detailTitle}>Published</span>
-                  <span className={styles.detailValue}>01.01.2024</span>
+                  <span className={styles.detailValue}>{post.createdAt.toString().slice(4, 16)}</span>
                </div>
             </div>
             <div className={styles.content}>
-               Lorem ipsum dolor sit, amet consectetur adipisicing elit. In harum ducimus laborum minus, laudantium illum quaerat voluptatibus hic perferendis modi ex fugiat dicta aliquid earum quo non soluta ab id.
+               {post.desc}
             </div>
          </div>
       </div>
