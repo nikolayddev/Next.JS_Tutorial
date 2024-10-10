@@ -4,10 +4,34 @@ import { getPost } from "@/lib/data";
 import PostUser from "@/components/postUser/PostUser";
 import { Suspense } from "react";
 
+//Fetch data with an API
+const getData = async (slug) => {
+   const res = await fetch(`http://localhost:3000/api/blog/${slug}`);
+
+   if (!res.ok) {
+      console.log(res);
+      throw new Error('Something went wrong!');
+   }
+
+   return res.json();
+}
+
+// const deleteData = async (slug) => {
+//    const res = await fetch(`http://localhost:3000/api/blog/${slug}`, { method: "DELETE" });
+
+//    if (!res.ok) {
+//       console.log(res);
+//       throw new Error('Something went wrong!');
+//    }
+
+//    return res.json();
+// }
+
 export default async function SinglePostPage({ params }) {
    const { slug } = params;
 
-   const post = await getPost(slug);
+   const post = await getData(slug);
+   // const post = await getPost(slug);
 
    return (
       <div className={styles.container}>
@@ -23,7 +47,7 @@ export default async function SinglePostPage({ params }) {
             <div className={styles.detail}>
                <div className={styles.detailText}>
                   {post && (
-                     <Suspense fallback={<div>Loading...</div>}>
+                     <Suspense fallback={<div>Loading... </div>}>
                         <PostUser userId={post.userId} />
                      </Suspense>
                   )}

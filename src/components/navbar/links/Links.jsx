@@ -3,8 +3,9 @@ import { useState } from "react";
 import styles from "./links.module.css";
 import NavLink from "./navLink/NavLink";
 import Image from "next/image";
+import { handleGitHubLogout } from "@/lib/actions";
 
-export default function Links() {
+export default function Links({ session }) {
     const [open, setOpen] = useState(false);
 
 
@@ -27,9 +28,6 @@ export default function Links() {
         },
     ]
 
-    const session = true;
-    const isAdmin = true;
-
     return (
         <div className={styles.container}>
             <div className={styles.links}>
@@ -37,11 +35,13 @@ export default function Links() {
                     <NavLink item={link} key={link.title} />
                 ))}
 
-                {session ?
+                {session?.user ?
                     (
                         <>
-                            {isAdmin && <NavLink item={{ title: "Admin", path: "/admin" }} />}
-                            <button className={styles.logout}>Logout</button>
+                            {session.user?.isAdmin && <NavLink item={{ title: "Admin", path: "/admin" }} />}
+                            <form action={handleGitHubLogout}>
+                                <button className={styles.logout}>Logout</button>
+                            </form>
                         </>
                     ) :
                     (
